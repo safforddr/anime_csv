@@ -1,0 +1,42 @@
+README anime_csv on Linux
+
+anime_csv is a python script that takes 1449 csv values and writes them directly
+to the anime_matrix on an Asus G14 2022 model (GA402RK). It does not depend 
+on asusctl or other service daemon.
+
+Why csv?
+
+Other software from Asus or asusctl can translate and display from gif or png
+images. By supplying 1449 brightness values in csv form, we directly specify
+the brightness of each LED. Also, since the csv reader ignores whitespace,
+we can format the csv file to look exactly like the matrix itself, greatly
+simplifying the pixel perfect drawing of images. The provided examples show 
+nicely formatted csv files. As a final benefit, editing a csv file in something 
+like vi makes it really easy to do things like set all the leds, or all the 
+edges at once. Besides, who doesn't want to edit led pixels directly in vi?
+
+The matrix has 1449 leds in an odd format - 61 rows high by 34 columns wide,
+but with rows offset in a diamond pattern, and with the bottom left corner
+of the matrix missing. Normally it is hard to control a specific LED directly,
+but with the formatted csv template it becomes simple.
+
+Running (as root):
+
+First, if you have asusctl installed (you probably do), turn it off with a:
+    systemctl stop asusd
+    
+Then simply:
+    ./anime_csv <csv file name>
+
+template.csv provides an example with all edges of the matrix on full.
+dave.csv has all background pixels on dim, the edges on medium, and the
+word "DAVE" in bright.
+
+While editing the csv files, keep each numeric field 3 characters wide with
+a trailing comma and space to keep the proportions correct. (e.g. "  1, ",
+or "255, "). Values must be 0 - 255 inclusive, 0 being off and 255 full.
+Also, you will want to expand the window large enough to avoid line wrap.
+
+A wireshark usb capture of the data sent to the matrix device is included
+in binary (pcapng) format and as fully parsed in a pdf, so you can follow
+along with the source code to understand how the code works.
